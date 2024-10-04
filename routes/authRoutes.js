@@ -5,12 +5,43 @@ const router = express.Router();
 
 // Lägg till ny användare
 router.post("/register", async (req, res) => {
-    console.log("Registrera...");
+    try {
+        const { username, password } = req.body;
+
+        // Validera input
+        if(!username || !password) {
+            return res.status(400).json({error: "Ogiltigt input, ange både användarnamn och lösenord"});
+        }
+
+        // Vid korrekt input - spara användare
+        res.status(201).json({ message: "Användare skapad."});
+
+    } catch (error) {
+        res.status(500).json({ error: "Server error"});
+    }
 });
 
 // Användare loggar in 
 router.post("/login", async (req, res) => {
-    console.log("Logga in...");
+    try {
+        const { username, password } = req.body;
+
+        // Validera input
+        if(!username || !password) {
+            return res.status(400).json({error: "Ogiltigt input, ange både användarnamn och lösenord"});
+        }
+
+        // Kontrollera inloggningsuppgifter
+        if (username === "Julie" && password === "lösenord") {
+            res.status(200).json({message: "Inloggningen lyckades."});
+        } else {
+            res.status(401).json({ error: "Ogiltigt användarnamn eller lösenord."});
+        }
+
+
+    } catch (error) {
+        res.status(500).json({ error: "Server error"});
+    }
 });
 
 module.exports = router;
