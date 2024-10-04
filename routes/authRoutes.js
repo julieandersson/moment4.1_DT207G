@@ -2,6 +2,16 @@
 
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
+require("dotenv").config();
+
+// Ansluter till MongoDB
+mongoose.set("strictQuery", false);
+mongoose.connect(process.env.DATABASE).then(() => {
+    console.log("Ansluten till MongoDB.")
+}).catch ((error) => {
+    console.error("Något gick fel vid anslutning av MongoDB.");
+});
 
 // Lägg till ny användare
 router.post("/register", async (req, res) => {
