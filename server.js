@@ -3,10 +3,14 @@
 // Inkluderar och använder express
 const express = require("express");
 const app = express();
-
+// Inkluderar routes
+const authRoutes = require("./routes/authRoutes");
+//Routes
+app.use("/api", authRoutes);
 // Inkluderar dotenv
 require("dotenv").config();
-const port = process.env.PORT || 3000;
+
+const port = process.env.PORT || 3001;
 
 app.use(express.json()); // Konvertering till json
 
