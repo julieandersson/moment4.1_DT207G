@@ -5,7 +5,9 @@ const express = require("express");
 const app = express();
 app.use(express.json()); // Konvertering till json
 
-
+//Inkluderar och använder cors för att tillåta alla domäner
+const cors = require("cors");
+app.use(cors()); 
 
 // Inkluderar routes
 const authRoutes = require("./routes/authRoutes");
@@ -15,6 +17,8 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const port = process.env.PORT || 3001;
+
+
 
 //Routes
 app.use("/api", authRoutes);

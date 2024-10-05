@@ -26,6 +26,12 @@ router.post("/register", async (req, res) => {
         if(!username || !password) {
             return res.status(400).json({error: "Ogiltigt input, ange både användarnamn och lösenord"});
         }
+        // Kontrollera om användarnamn redan finns
+        const userExist = await User.findOne({ username: username});
+        if (userExist) {
+            // Om användaren redan finns
+            return res.status(409).json({ error: "Användarnamnet är upptaget."});
+        }
 
         // Vid korrekt input - spara användare
         const user = new User({ username, password });
