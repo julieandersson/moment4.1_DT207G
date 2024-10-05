@@ -13,6 +13,9 @@ mongoose.connect(process.env.DATABASE).then(() => {
     console.error("Något gick fel vid anslutning av MongoDB.");
 });
 
+// Användar-modell
+const User = require("../models/User");
+
 // Lägg till ny användare
 router.post("/register", async (req, res) => {
     try {
@@ -24,6 +27,9 @@ router.post("/register", async (req, res) => {
         }
 
         // Vid korrekt input - spara användare
+        const user = new User({ username, password });
+        await user.save();
+
         res.status(201).json({ message: "Användare skapad."});
 
     } catch (error) {
@@ -41,11 +47,18 @@ router.post("/login", async (req, res) => {
             return res.status(400).json({error: "Ogiltigt input, ange både användarnamn och lösenord"});
         }
 
-        // Kontrollera inloggningsuppgifter
-        if (username === "Julie" && password === "lösenord") {
-            res.status(200).json({message: "Inloggningen lyckades."});
+        // Kontrollera inloggningsuppgifter och om användaren redan finns
+        const user = await User.findOne( { username });
+        if(!user) {
+            return res.status(401).json({ error : "Ogiltigt användarnamn eller lösenord." });
+        }
+
+        // Kontrollera lösenord
+        const isPasswordMatch = await user.comparePassword(password);
+        if(!isPasswordMatch) {
+            return res.status(401).json({ error : "Ogiltigt användarnamn eller lösenord." });
         } else {
-            res.status(401).json({ error: "Ogiltigt användarnamn eller lösenord."});
+            res.status(200).json({ message: "Inloggning lyckades!" });
         }
 
 
