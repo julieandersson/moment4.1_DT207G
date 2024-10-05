@@ -11,22 +11,37 @@ app.use(cors());
 
 // Inkluderar routes
 const authRoutes = require("./routes/authRoutes");
-const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken"); // Inkluderar jsonwebtoken
+const Workexperience = require("./models/workexperience");
 
 // Inkluderar dotenv
 require("dotenv").config();
 
 const port = process.env.PORT || 3001;
 
-
-
 //Routes
 app.use("/api", authRoutes);
 
 // Skyddad route
-app.get("/api/workexperience", authenticateToken, (req, res) => {
-    res.json({ message: "Skyddad route"});
-})
+app.get("/api/workexperience", authenticateToken, async (req, res) => {
+    try {
+        // Hämtar arbetserfarenheter från databasen
+        const result = await Workexperience.find({});
+        // Kontroll om det finns någon data i databasen
+        if (result.length === 0) {
+            // Meddelande om inget data finns i databasen
+            return res.status(404).json({ message: "Inga arbetserfarenheter hittades." });
+        } else {
+            // Returnerar erfarenheter
+            return res.json(result);
+        }
+        // Om fel
+    } catch (error) {
+        console.error("Fel vid hämtning av arbetserfarenheter: ", error);
+        // Returnera statuskod tillsammans med fel
+        return res.status(500).json(error);
+    }
+});
 
 // Validera token
 function authenticateToken(req, res, next) {
