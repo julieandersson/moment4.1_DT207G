@@ -19,7 +19,7 @@ npm install
 Skapa en .envfil och lägg till dina egna miljövariabler baserat på .env.sample. Exempel:
 ```bash
 PORT=3001
-DATABASE=
+DATABASE="mongodb+srv://<username>:<password>@<your-cluster-url>/<database>?retryWrites=true&w=majority"
 JWT_SECRET_KEY="SecretKey"
 ```
 
