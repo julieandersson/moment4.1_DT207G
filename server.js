@@ -53,7 +53,7 @@ function authenticateToken(req, res, next) {
     jwt.verify(token, process.env.JWT_SECRET_KEY, (err, username) => {
         if(err) return res.status(403).json({ message: "Ogiltig JWT. "});
 
-        req,username = username;
+        req.username = username;
         next();
     })
 }
